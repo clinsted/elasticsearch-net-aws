@@ -1,4 +1,0 @@
-﻿{
-	"endpoint": "<your aws elasticsearch service endpoint>",
-	"region": "us-east-1"
-}
