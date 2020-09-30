@@ -32,7 +32,11 @@ namespace Elasticsearch.Net.Aws
         {
             get
             {
-                return ToSingleValue(this._message.Headers.GetValues("Authorization")); } set { this._message.Headers.TryAddWithoutValidation("Authorization", value);
+                return ToSingleValue(this._message.Headers.GetValues("Authorization"));
+            }
+            set
+            {
+                this._message.Headers.TryAddWithoutValidation("Authorization", value);
             }
         }
 
@@ -44,7 +48,7 @@ namespace Elasticsearch.Net.Aws
             }
             set
             {
-               this._message.Headers.TryAddWithoutValidation("x-amz-security-token", value);
+                this._message.Headers.TryAddWithoutValidation("x-amz-security-token", value);
             }
         }
 

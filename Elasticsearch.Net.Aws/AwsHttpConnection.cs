@@ -6,14 +6,13 @@ namespace Elasticsearch.Net.Aws
 {
     public class AwsHttpConnection : HttpConnection
     {
-        private readonly string _awsAccessKeyId;
-        private readonly string _awsSecretAccessKey;
         private readonly string _region;
 
-        public AwsHttpConnection(string awsAccessKeyId, string awsSecretAccessKey, string region)
+        private readonly ImmutableCredentials _awsCredentials;
+
+        public AwsHttpConnection(ImmutableCredentials awsCredentials, string region)
         {
-            this._awsAccessKeyId = awsAccessKeyId;
-            this._awsSecretAccessKey = awsSecretAccessKey;
+            this._awsCredentials = awsCredentials;
             this._region = region;
         }
 
@@ -32,15 +31,12 @@ namespace Elasticsearch.Net.Aws
                 data = requestData.PostData.WrittenBytes;
                 if (data == null)
                 {
-                    using (MemoryStream ms = new MemoryStream())
-                    {
-                        requestData.PostData.Write(ms, requestData.ConnectionSettings);
-                        data = ms.ToArray();
-                    }
+                    using MemoryStream ms = new MemoryStream();
+                    requestData.PostData.Write(ms, requestData.ConnectionSettings);
+                    data = ms.ToArray();
                 }
             }
-            ImmutableCredentials credentials = new ImmutableCredentials(this._awsAccessKeyId, this._awsSecretAccessKey, null);
-            SignV4Util.SignRequest(request, data, credentials, this._region, "es");
+            SignV4Util.SignRequest(request, data, this._awsCredentials, this._region, "es");
         }
     }
 }

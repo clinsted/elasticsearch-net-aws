@@ -13,7 +13,7 @@ namespace Elasticsearch.Net.Aws
 {
     internal static class SignV4Util
     {
-        private static readonly char[] _datePartSplitChars = {'T'};
+        private static readonly char[] _datePartSplitChars = { 'T' };
         private static readonly UTF8Encoding _encoding = new UTF8Encoding(false);
         private static readonly byte[] _emptyBytes = new byte[0];
 
@@ -270,19 +270,17 @@ namespace Elasticsearch.Net.Aws
 
         private static byte[] GetHash(this byte[] data)
         {
-            using (SHA256 sha256 = SHA256.Create())
-            {
-                return sha256.ComputeHash(data);
-            }
+            using SHA256 sha256 = SHA256.Create();
+            return sha256.ComputeHash(data);
         }
 
         private static byte[] GetHmacSha256Hash(this byte[] key, string data)
         {
-            using (HMACSHA256 hmacsha256 = new HMACSHA256())
+            using HMACSHA256 hmacsha256 = new HMACSHA256
             {
-                hmacsha256.Key = key;
-                return hmacsha256.ComputeHash(_encoding.GetBytes(data));
-            }
+                Key = key
+            };
+            return hmacsha256.ComputeHash(_encoding.GetBytes(data));
         }
 
         private static string GetCredentialScope(string date, string region, string service)
@@ -310,7 +308,7 @@ namespace Elasticsearch.Net.Aws
 
         private static void WriteRequestPayloadHash(byte[] data, StringBuilder builder)
         {
-            data = data ?? _emptyBytes;
+            data ??= _emptyBytes;
             byte[] hash = GetHash(data);
             foreach (byte b in hash)
             {
